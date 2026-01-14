@@ -1,5 +1,3 @@
-
-
 // import express from "express";
 // import cors from "cors";
 
@@ -15,26 +13,34 @@
 // import adminRoutes from "./routes/admin.routes.js";
 // import emiRoutes from "./routes/emi.routes.js";
 
-
-
-
 // // Cron
 // import { startCronJobs } from "./utils/cronJobs.js";
 
 // const app = express();
 
-// /* ---------- Middleware ---------- */
+// /* ---------- CORS ---------- */
+// const allowedOrigins = [
+//   "http://localhost:5173",                    // local frontend
+//   "https://greenfin-frontend-1.onrender.com" // Render frontend
+// ];
+
 // app.use(
 //   cors({
-//     origin: "*", 
-//     credentials: false,
+//     origin: function (origin, callback) {
+//       if (!origin) return callback(null, true); // allow server-to-server or Postman
+//       if (allowedOrigins.includes(origin)) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("CORS not allowed ❌"));
+//       }
+//     },
+//     credentials: true, // allow cookies or JWT headers
 //   })
 // );
 
-
+// /* ---------- Middleware ---------- */
 // app.use(express.json({ limit: "5mb" }));
 // app.use(express.urlencoded({ extended: true }));
-
 
 // /* ---------- Routes ---------- */
 // app.use("/api/auth", authRoutes);
@@ -42,15 +48,10 @@
 // app.use("/api/dashboard", dashboardRoutes);
 // app.use("/api/loans", loanRoutes);
 // app.use("/api/documents", documentRoutes);
-
-// // ✅ FIXED: Loan Tracking route
 // app.use("/api/tracking", trackingRoutes);
 // app.use("/api/loan/tracking", trackingRoutes);
-
-// // app.use("/api/trade", tradeRoutes);
 // app.use("/api/sustainability", sustainabilityRoutes);
 // app.use("/api/admin", adminRoutes);
-// // app.use("/api/emi", emiRoutes);
 // app.use("/api/emi", emiRoutes);
 // app.use("/api/marketplace", marketplaceRoutes);
 
@@ -83,23 +84,15 @@ import { startCronJobs } from "./utils/cronJobs.js";
 
 const app = express();
 
-/* ---------- CORS ---------- */
-const allowedOrigins = [
-  "http://localhost:5173",                    // local frontend
-  "https://greenfin-frontend-1.onrender.com" // Render frontend
-];
-
+/* ---------- CORS (FIXED & SIMPLE) ---------- */
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // allow server-to-server or Postman
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS not allowed ❌"));
-      }
-    },
-    credentials: true, // allow cookies or JWT headers
+    origin: [
+      "http://localhost:5173",
+      "https://greenfin-frontend-1.onrender.com",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
