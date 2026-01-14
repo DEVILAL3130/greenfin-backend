@@ -24,21 +24,13 @@ import { startCronJobs } from "./utils/cronJobs.js";
 const app = express();
 
 /* ---------- Middleware ---------- */
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://greenfin-frontend-1.onrender.com"
-];
-
 app.use(
   cors({
-    origin: allowedOrigins,
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: "*", 
+    credentials: false,
   })
 );
 
-app.options("*", cors());
 
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
