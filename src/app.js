@@ -27,10 +27,25 @@ const app = express();
 
 /* ---------- Middleware ---------- */
 // app.use(cors());
-// app.use(express.json({ limit: "5mb" }));
-/* ---------- Middleware ---------- */
-app.use(cors());
-// app.use(express.json);
+const allowedOrigins = [
+  "http://localhost:5173", // local dev
+  process.env.FRONTEND_URL  // Render frontend
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS not allowed ❌"));
+      }
+    },
+    credentials: true
+  })
+);
+
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
 
